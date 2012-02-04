@@ -13,14 +13,6 @@ get '/configure' do
 end
 
 post '/request' do
-  response = Twilio::TwiML::Response.new do |r|
-    r.Redirect 'http://tendrilio.herokuapp.com/smstest'
-  end
-  puts response.text
-
-end
-
-post '/smstest' do
   # Twilio credentials
   account_sid = ENV['TWILIO_SID']
   auth_token = ENV['TWILIO_TOKEN']
@@ -29,11 +21,16 @@ post '/smstest' do
   # set up a client to talk to the Twilio REST API
   @client = Twilio::REST::Client.new account_sid, auth_token
   
+  message = ""
+  
   @client.account.sms.messages.create(
     :from => caller_id,
     :to => '+19546090220',
-    :body => 'Hey there!'
+    :body => message
   )
   
-  redirect('/')
+  response = Twilio::TwiML::Response.new do |r|
+    r.Redirect 'http://tendrilio.herokuapp.com/smstest'
+  end
+  puts response.text
 end
