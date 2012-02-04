@@ -12,7 +12,7 @@ get '/configure' do
   erb :configure
 end
 
-get '/request' do
+post '/request' do
   response = Twilio::TwiML::Response.new do |r|
     r.Redirect 'http://tendrilio.herokuapp.com/smstest'
   end
