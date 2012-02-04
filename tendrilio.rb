@@ -74,7 +74,7 @@ post '/request' do
   caller_id = ENV['TWILIO_CALLER_ID']
   
 
-    status, headers, body = call env.merge("PATH_INFO" => '/prediction')[status, headers, body.map(&:upcase)]
+    status, headers, body = call env.merge("PATH_INFO" => '/prediction')    
     tendril_result = body
     message = "We estimate your power bill this month will be" + tendril_result
   
