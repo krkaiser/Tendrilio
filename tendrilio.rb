@@ -17,15 +17,40 @@ end
 
 get '/pricing' do
   tendril_token = ENV['TENDRIL_TOKEN']
+  result = nil
   
-  open("http://dev.tendrilinc.com/connect/account/63/pricing/schedule;from=2011-12-30T00:00:00-0000;to=2011-12-31T00:00:00-0000",
+  open("http://dev.tendrilinc.com/connect/account/default-account/pricing/schedule;from=2011-12-30T00:00:00-0000;to=2011-12-31T00:00:00-0000",
       'Accept' => 'application/json',
       'Content-Type' => 'application/json', 
       'Access_Token' => tendril_token ) { |f|
-          res = f.read
-          result =  JSON.parse(res)
+          result = JSON.parse(f.read)
         }
-  prints result
+   return result
+end
+
+get '/consumption' do
+  tendril_token = ENV['TENDRIL_TOKEN']
+  result = nil
+  
+  open("http://dev.tendrilinc.com//connect/user/current-user/account/default-account/consumption/MONTHLY;from=2011-07-01T00:00:00-0000;to=2011-12-31T00:00:00-0000;limit-to-latest=20;include-submetering-devices=false",
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json', 
+      'Access_Token' => tendril_token ) { |f|
+          result = JSON.parse(f.read)
+        }
+   return result
+end
+
+get '/prediction' do
+  tendril_token = ENV['TENDRIL_TOKEN']
+  result = nil
+  open("http://dev.tendrilinc.com//connect/user/current-user/account/default-account/consumption/MONTHLY/projection;source=ACTUAL",
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json', 
+      'Access_Token' => tendril_token ) { |f|
+          result = JSON.parse(f.read)
+        }
+   return result
 end
 
 
@@ -44,10 +69,19 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
+  if body == 'pricing'
+    
+    message = "Your current power rate is" + tendril_result
+  elsif body == 'month to date'
+    
+    message = "Month to date you have consumed" + tendril_result
+  elsif body == 'prediction'
+    
+    message = "We estimate your power bill this month will be" + tendril_result
+  end
+  
   # set up a client to talk to the Twilio REST API
   @client = Twilio::REST::Client.new account_sid, auth_token
-  
-  message = ""
   
   @client.account.sms.messages.create(
     :from => caller_id,
