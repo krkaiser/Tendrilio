@@ -25,7 +25,7 @@ get '/pricing' do
       'Access_Token' => tendril_token ) { |f|
           result = JSON.parse(f.read)
         }
-   return result['effectivePriceRecords']['effectivePriceRecord'][0]['energyPrice']
+   return result['effectivePriceRecords']['effectivePriceRecord'][0]
 end
 
 get '/consumption' do
@@ -38,7 +38,7 @@ get '/consumption' do
       'Access_Token' => tendril_token ) { |f|
           result = JSON.parse(f.read)
         }
-   return result["componentList"]["component"][1]["consumption"]
+   return result["componentList"]["component"][1][1]
 end
 
 get '/prediction' do
@@ -66,6 +66,10 @@ get '/weather' do
    
 end
 
+get '/test' do
+
+end
+
 
 post '/request' do
   # Twilio credentials
@@ -73,12 +77,14 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
+  smsbody = request["Body"]
 
-    #status, headers, body = call env.merge("PATH_INFO" => '/prediction')    
-    
-    tendril_result = get('/prediction').to_s
-    
-    message = "We estimate your power bill this month will be " + tendril_result
+  if smsbody == "prediction"
+    status, headers, body = call env.merge("PATH_INFO" => '/prediction')
+    message = "We estimate your power bill this month will be " + body[0]
+  else
+    message = "Sorry we dont recognize that request"
+  end
   
   # set up a client to talk to the Twilio REST API
   @client = Twilio::REST::Client.new account_sid, auth_token
@@ -90,7 +96,7 @@ post '/request' do
   )
   
   response = Twilio::TwiML::Response.new do |r|
-    r.Redirect 'http://tendrilio.herokuapp.com/smstest'
+    r.Redirect 'http://tendrilio.herokuapp.com/'
   end
   puts response.text
 end
