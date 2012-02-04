@@ -19,26 +19,26 @@ get '/pricing' do
   tendril_token = ENV['TENDRIL_TOKEN']
   result = nil
   
-  open("http://dev.tendrilinc.com/connect/account/default-account/pricing/schedule;from=2011-12-30T00:00:00-0000;to=2011-12-31T00:00:00-0000",
+  open("http://dev.tendrilinc.com/connect/account/default-account/pricing/schedule;from=2012-02-01T00:00:00-0000;to=2012-03-01T00:00:00-0000",
       'Accept' => 'application/json',
       'Content-Type' => 'application/json', 
       'Access_Token' => tendril_token ) { |f|
           result = JSON.parse(f.read)
         }
-   return result
+   return result['effectivePriceRecords']['effectivePriceRecord'][0]['energyPrice']
 end
 
 get '/consumption' do
   tendril_token = ENV['TENDRIL_TOKEN']
   result = nil
   
-  open("http://dev.tendrilinc.com//connect/user/current-user/account/default-account/consumption/MONTHLY;from=2011-07-01T00:00:00-0000;to=2011-12-31T00:00:00-0000;limit-to-latest=20;include-submetering-devices=false",
+  open("http://dev.tendrilinc.com//connect/user/current-user/account/default-account/consumption/MONTHLY;from=2012-02-01T00:00:00-0000;to=2012-03-01T00:00:00-0000;limit-to-latest=20;include-submetering-devices=false",
       'Accept' => 'application/json',
       'Content-Type' => 'application/json', 
       'Access_Token' => tendril_token ) { |f|
           result = JSON.parse(f.read)
         }
-   return result
+   return result["componentList"]["component"][1]["consumption"]
 end
 
 get '/prediction' do
@@ -50,7 +50,7 @@ get '/prediction' do
       'Access_Token' => tendril_token ) { |f|
           result = JSON.parse(f.read)
         }
-   return result
+   return result['cost']
 end
 
 
@@ -73,14 +73,18 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
-  if body == 'pricing'
+  smsbody = request.body
+  
+  if smsbody == 'pricing'
     
-    message = "Your current power rate is" + tendril_result
-  elsif body == 'month to date'
+    message = "Your current power rate is" + body
+  elsif smsbody == 'month to date'
     
     message = "Month to date you have consumed" + tendril_result
-  elsif body == 'prediction'
-    
+  elsif smsbody == 'prediction'
+    status, headers, body = call env.merge("PATH_INFO" => '/prediction')
+      [status, headers, body.map(&:upcase)]
+    tendril_result = body
     message = "We estimate your power bill this month will be" + tendril_result
   end
   
