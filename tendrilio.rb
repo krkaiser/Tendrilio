@@ -1,4 +1,4 @@
-# tendrillio.rb
+# tendrilio.rb
 require 'sinatra'
 
 get '/' do
