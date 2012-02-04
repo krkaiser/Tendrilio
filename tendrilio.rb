@@ -75,7 +75,7 @@ post '/request' do
   
 
     status, headers, body = call env.merge("PATH_INFO" => '/prediction')    
-    tendril_result = body
+    tendril_result = body.to_s
     message = "We estimate your power bill this month will be" + tendril_result
   
   # set up a client to talk to the Twilio REST API
