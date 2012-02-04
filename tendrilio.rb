@@ -1,6 +1,12 @@
 # tendrilio.rb
+require 'rubygems'
 require 'sinatra'
 
 get '/' do
-  'Tendrilio - A Tendril + Twilio Mashup'
+  @title = "Tendrilio"
+  erb :index, :layout => :layout
+end
+
+get '/auth' do
+  
 end
