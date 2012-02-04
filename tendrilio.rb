@@ -28,6 +28,16 @@ get '/pricing' do
   prints result
 end
 
+
+get '/weather' do
+   weatherbug_token = ENV['WEATHERBUG_TOKEN']
+   open("i.wxbug.net/REST/Direct/GetForecast.ashx?zip=#{params[:zip]}&nf=1&c=US&l=en&api_key=#{weatherbug_token}")
+   
+   prints result
+   
+end
+
+
 post '/request' do
   # Twilio credentials
   account_sid = ENV['TWILIO_SID']
@@ -50,3 +60,4 @@ post '/request' do
   end
   puts response.text
 end
+
