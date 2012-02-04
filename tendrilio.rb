@@ -56,9 +56,12 @@ end
 
 get '/weather' do
    weatherbug_token = ENV['WEATHERBUG_TOKEN']
-   open("http://i.wxbug.net/REST/Direct/GetForecast.ashx?zip=#{params[:zip]}&nf=1&c=US&l=en&api_key=#{weatherbug_token}")
+   open("http://i.wxbug.net/REST/Direct/GetForecast.ashx?zip=#{params[:zip]}&nf=1&c=US&l=en&api_key=#{weatherbug_token}") { |f|
+      res = f.read
+      result = JSON.parse(res)
+     }
    
-   prints result
+   return res
    
 end
 
