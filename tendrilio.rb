@@ -12,7 +12,7 @@ get '/configure' do
   erb :configure
 end
 
-post '/request' do
+get '/request' do
   response = Twilio::TwiML::Response.new do |r|
     r.Redirect 'http://tendrilio.herokuapp.com/smstest'
   end
@@ -20,7 +20,7 @@ post '/request' do
 
 end
 
-get '/smstest' do
+post '/smstest' do
   # Twilio credentials
   account_sid = ENV['TWILIO_SID']
   auth_token = ENV['TWILIO_TOKEN']
