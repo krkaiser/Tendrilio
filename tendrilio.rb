@@ -56,7 +56,7 @@ end
 
 get '/weather' do
    weatherbug_token = ENV['WEATHERBUG_TOKEN']
-   open("i.wxbug.net/REST/Direct/GetForecast.ashx?zip=#{params[:zip]}&nf=1&c=US&l=en&api_key=#{weatherbug_token}")
+   open("http://i.wxbug.net/REST/Direct/GetForecast.ashx?zip=#{params[:zip]}&nf=1&c=US&l=en&api_key=#{weatherbug_token}")
    
    prints result
    
