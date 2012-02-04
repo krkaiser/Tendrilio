@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'twilio-ruby'
+require 'open-uri'
 
 get '/' do
   @title = "Tendrilio"
@@ -10,6 +11,17 @@ end
 
 get '/configure' do
   erb :configure
+end
+
+get '/tendril' do
+  tendril_token = ENV['TENDRIL_TOKEN']
+  
+  open("http://dev.tendrilinc.com/connect/account/default-account/pricing/schedule;from=2011-12-30T00:00:00-0000;to=2011-12-31T00:00:00-0000",
+      'Accept' => 'application/json',
+      'Content-Type' => 'application/json', 
+      'Access_Token' => tendril_token ) { |f|
+          return f.read
+        }
 end
 
 post '/request' do
