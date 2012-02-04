@@ -20,7 +20,7 @@ post '/request' do
 
 end
 
-post '/smstest' do
+get '/smstest' do
   # Twilio credentials
   account_sid = ENV['TWILIO_SID']
   auth_token = ENV['TWILIO_TOKEN']
