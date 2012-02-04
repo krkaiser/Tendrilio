@@ -73,20 +73,10 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
-  smsbody = request.body
-  
-  if smsbody == 'pricing'
-    
-    message = "Your current power rate is" + body
-  elsif smsbody == 'month to date'
-    
-    message = "Month to date you have consumed" + tendril_result
-  elsif smsbody == 'prediction'
-    status, headers, body = call env.merge("PATH_INFO" => '/prediction')
-      [status, headers, body.map(&:upcase)]
+
+    status, headers, body = call env.merge("PATH_INFO" => '/prediction')[status, headers, body.map(&:upcase)]
     tendril_result = body
     message = "We estimate your power bill this month will be" + tendril_result
-  end
   
   # set up a client to talk to the Twilio REST API
   @client = Twilio::REST::Client.new account_sid, auth_token
