@@ -13,7 +13,11 @@ get '/configure' do
 end
 
 get '/request' do
-  redirect '/smstest'
+  response = Twilio::TwiML::Response.new do |r|
+    r.Redirect 'http://tendrilio.herokuapp.com/smstest'
+  end
+  puts response.text
+
 end
 
 get '/smstest' do
