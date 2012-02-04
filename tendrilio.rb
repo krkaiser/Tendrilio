@@ -50,7 +50,7 @@ get '/prediction' do
       'Access_Token' => tendril_token ) { |f|
           result = JSON.parse(f.read)
         }
-   return result['cost']
+   body result['cost']
 end
 
 
