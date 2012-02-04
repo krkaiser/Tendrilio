@@ -77,13 +77,14 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
-  smsbody = request["Body"]
+  smsbody = params['Body']
+  
 
   if smsbody == "prediction"
     status, headers, body = call env.merge("PATH_INFO" => '/prediction')
     message = "We estimate your power bill this month will be " + body[0]
   else
-    message = "Sorry we dont recognize that request"
+    message = "Sorry we dont recognize that request."
   end
   
   # set up a client to talk to the Twilio REST API
