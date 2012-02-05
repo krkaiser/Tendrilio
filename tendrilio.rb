@@ -77,7 +77,7 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
-  smsbody = params[:Body]
+  smsbody = ""
 
   if smsbody == "prediction"
     status, headers, body = call env.merge("PATH_INFO" => '/prediction')
