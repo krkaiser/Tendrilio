@@ -77,7 +77,7 @@ post '/request' do
   auth_token = ENV['TWILIO_TOKEN']
   caller_id = ENV['TWILIO_CALLER_ID']
   
-  smsbody = params['body'].to_s
+  smsbody = params['body']
   
 
   if smsbody == "prediction"
