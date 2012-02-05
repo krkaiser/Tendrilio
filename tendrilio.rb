@@ -84,7 +84,7 @@ post '/request' do
     status, headers, body = call env.merge("PATH_INFO" => '/prediction')
     message = "We estimate your power bill this month will be " + body[0]
   else
-    message = "Sorry we dont recognize that request."
+    message = "Sorry we dont recognize that request " + smsbody 
   end
   
   # set up a client to talk to the Twilio REST API
